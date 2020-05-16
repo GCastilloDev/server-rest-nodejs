@@ -1,7 +1,9 @@
+require("./config/config");
+
 const express = require("express");
 const app = express();
+
 const bodyParser = require("body-parser");
-require('./config/config');
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false })); 

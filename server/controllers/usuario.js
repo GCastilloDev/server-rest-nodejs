@@ -84,7 +84,7 @@ app.put('/usuario/:id', [verificaToken, esAdministrador], (req, res) => {
       }
 
       if (!usuarioDB) {
-        return res.status(204).json({
+        return res.status(404).json({
           ok: true,
           message: 'Usuario no encontrado'
         });

@@ -12,7 +12,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json
 app.use(bodyParser.json());
 
-app.use(require("./controllers/usuario"));
+
+// Configuración global de rutas
+app.use(require("./controllers/index"));
 
 // Conexión a la BD
 mongoose.connect(
@@ -21,10 +23,11 @@ mongoose.connect(
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true,
+    useFindAndModify: false
   },
   (err, res) => {
     if (err) throw err;
-    console.log("Base de datos conectada...");
+    console.log('Base de datos conectada...');
   }
 );
 

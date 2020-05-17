@@ -1,13 +1,17 @@
 // Son las rutas
 const express = require("express");
 const Usuario = require("../models/usuario");
+const {
+  verificaToken,
+  esAdministrador,
+} = require('../middlewares/autenticacion');
 const bcrypt = require("bcrypt");
 const _ = require("underscore");
 
 const app = express();
 
 // Obtener usuarios
-app.get("/usuario", function (req, res) {
+app.get("/usuario", verificaToken, (req, res) => {
   let desde = Number(req.query.desde) || 0;
 
   let limite = Number(req.query.limite) || 5;
@@ -34,7 +38,7 @@ app.get("/usuario", function (req, res) {
 });
 
 // Crear usuarios
-app.post("/usuario", function (req, res) {
+app.post('/usuario', [verificaToken, esAdministrador], (req, res) => {
   let body = req.body;
 
   let usuario = new Usuario({
@@ -63,9 +67,9 @@ app.post("/usuario", function (req, res) {
 });
 
 // Actualizar usuarios
-app.put("/usuario/:id", function (req, res) {
+app.put('/usuario/:id', [verificaToken, esAdministrador], (req, res) => {
   let id = req.params.id;
-  let body = _.pick(req.body, ["nombre", "email", "img", "rol", "estado"]);
+  let body = _.pick(req.body, ['nombre', 'email', 'img', 'rol', 'estado']);
 
   Usuario.findByIdAndUpdate(
     id,
@@ -88,7 +92,7 @@ app.put("/usuario/:id", function (req, res) {
 });
 
 // Borrar usuario (solamente marcar como eliminado)
-app.delete("/usuario/:id", function (req, res) {
+app.delete('/usuario/:id', [verificaToken, esAdministrador], (req, res) => {
   let id = req.params.id;
 
   let cambiaEstado = {
@@ -111,7 +115,7 @@ app.delete("/usuario/:id", function (req, res) {
         return res.status(400).json({
           ok: false,
           error: {
-            message: "Usuario no encontrado",
+            message: 'Usuario no encontrado',
           },
         });
       }
